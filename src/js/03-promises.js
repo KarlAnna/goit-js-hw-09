@@ -30,19 +30,17 @@ function onFormSubmit(e) {
   let stop = 0
   let d = Number(delay)
   let s = Number(step)
-  intervalId = setInterval(() => {
-      if (stop == amount) {
-        clearInterval(intervalId)
-        return
+      for (let i = d; ; i += s) {
+        if (stop == amount) {
+          return
+        }
+        stop += 1
+        createPromise(stop, i)
+          .then(({ position, delay }) => {
+            Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`)
+          })
+          .catch(({ position, delay }) => {
+            Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`)
+          });
       }
-    stop += 1
-      createPromise(stop, d)
-        .then(({ position, delay }) => {
-          Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`)
-        })
-        .catch(({ position, delay }) => {
-          Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`)
-        });
-    d += s
-    }, step);
 }
